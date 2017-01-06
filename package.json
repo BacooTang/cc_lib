@@ -1,6 +1,6 @@
 {
   "name": "cc_lib",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "ccrenqi lib",
   "main": "index.js",
   "scripts": {
@@ -14,6 +14,10 @@
     "ccrenqi",
     "lib"
   ],
+  "dependencies":{
+    "bluebird":"*",
+    "request":"*"
+  },
   "author": "bacootang",
   "license": "MIT",
   "bugs": {
