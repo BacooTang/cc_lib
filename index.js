@@ -21,3 +21,11 @@ global.get_ip_by_interface = (iface)=>{
 		return iface_info[0][address];
 	}
 }
+
+global.sleep = (time) =>{
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+            resolve();
+        }, time);
+	});
+}
