@@ -2,9 +2,11 @@
 
 global.Promise = require('bluebird');
 
-global.get = Promise.promisify(require('request'));
+const request = require('request-promise');
 
-global.post = Promise.promisify(require('request').post);
+global.get = request.get;
+
+global.post = request.post;
 
 global.now = () =>{
 	return new Date().getTime();
@@ -28,4 +30,15 @@ global.sleep = (time) =>{
             resolve();
         }, time);
 	});
+}
+
+global.password = (digits) => {
+    let text = ["abcdefghijklmnopqrstuvwxyz",'ABCDEFGHIJKLMNOPQRSTUVWXYZ','1234567890'];
+    let rand = (min, max) => {return Math.floor(Math.max(min, Math.random() * (max+1)));}
+    let pw = '';
+    for(let i=0; i<digits; ++i){
+        let strpos = rand(0, text.length-1);
+        pw += text[strpos].charAt(rand(0, text[strpos].length-1));
+    }
+    return pw;
 }
