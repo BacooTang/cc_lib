@@ -3,6 +3,7 @@
 global.Promise = require('bluebird');
 
 const request = require('request-promise');
+const crypto = require('crypto');
 
 global.get = request.get;
 
@@ -41,4 +42,62 @@ global.password = (digits) => {
         pw += text[strpos].charAt(rand(0, text[strpos].length-1));
     }
     return pw;
+}
+
+global.encode = (data) => {
+	try{
+        let key = "w1HRjViksi7inHXv";
+        let options = {
+            algorithm: 'aes-128-ecb',
+            input_encoding: 'utf-8',
+            output_encoding: 'base64'
+        };
+        let algorithm = options.algorithm || "aes-128-ecb";
+        let input_encoding = options.input_encoding || "utf8";
+        let output_encoding = options.output_encoding || "base64";
+        let iv = options.iv || "";
+        let auto_padding = options.auto_padding || true;
+        let cipher = crypto.createCipheriv(algorithm, key, iv);
+        cipher.setAutoPadding(auto_padding);
+        let cipher_chunks = [];
+        cipher_chunks.push(cipher.update(data, input_encoding, output_encoding));
+        cipher_chunks.push(cipher.final(output_encoding));
+        let cipher_str = cipher_chunks.join('');
+        cipher_chunks.length = 0;
+        cipher_chunks = undefined;
+    	cipher_str = cipher_str.replace(/\+/g, "-");
+    	cipher_str = cipher_str.replace(/\//g, "_");
+        return cipher_str;
+    }catch(e){
+    	return "";
+    }
+}
+
+global.decode = (data) => {
+	try{
+        let key = "w1HRjViksi7inHXv";
+    	data = data.replace(/\-/g, "+");
+    	data = data.replace(/\_/g, "/");
+        let options = {
+            algorithm: 'aes-128-ecb',
+            input_encoding: 'base64',
+            output_encoding: 'utf-8'
+        };
+        let algorithm = options.algorithm || "aes-128-ecb";
+        let input_encoding = options.input_encoding || "base64";
+        let output_encoding = options.output_encoding || "utf8";
+        let iv = options.iv || "";
+        let auto_padding = options.auto_padding || true;
+        let decipher = crypto.createDecipheriv(algorithm, key, iv);
+        decipher.setAutoPadding(auto_padding);
+        let decipher_chunks = [];
+        decipher_chunks.push(decipher.update(data, input_encoding, output_encoding));
+        decipher_chunks.push(decipher.final(output_encoding));
+        let decipher_text = decipher_chunks.join('');
+        decipher_chunks.length = 0;
+        decipher_chunks = undefined;
+        return decipher_text;
+    }catch(e){
+    	return "";
+    }
 }
